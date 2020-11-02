@@ -40,7 +40,7 @@ export default {
       this.iFrame.contentWindow.postMessage(JSON.stringify(this.jsonMessage));
     },
     addListener: function() {
-      // Adds a listener for any messages coming from the iFrame
+      // Adds a listener for any messages coming from the iFramegit
       window.onmessage = function(e) {
         console.log("Message Recieved: " + e.data);
       }
@@ -49,6 +49,8 @@ export default {
   mounted: function() {
     // Pull the iFrame into data for easier access
     this.iFrame = document.getElementById("myIframe");
+    // Add the listener for any messages coming from the unreal app
+    this.addListener();
   }
 };
 </script>
