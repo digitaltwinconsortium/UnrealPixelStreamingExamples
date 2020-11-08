@@ -15,8 +15,6 @@ export default {
   name: "Home",
   data: function() {
     return {
-      // Storing the iFrame simply for easier access
-      iFrame: null,
       // Json message to send to the unreal app
       jsonMessage: {
         type: "TestType",
@@ -36,19 +34,18 @@ export default {
   },
   methods: {
     sendMessage: function() {
+      console.log("Sending message from Vue...");
       // Send a json message via the iFrame
-      this.iFrame.contentWindow.postMessage(JSON.stringify(this.jsonMessage));
+      document.getElementById("myIframe").contentWindow.postMessage(JSON.stringify(this.jsonMessage),'*');
     },
     addListener: function() {
-      // Adds a listener for any messages coming from the iFramegit
+      // Adds a listener for any messages coming from the iFrame
       window.onmessage = function(e) {
-        console.log("Message Recieved: " + e.data);
+        console.log("Message Recieved from Signalling Server: " + e.data);
       }
     }
   },
   mounted: function() {
-    // Pull the iFrame into data for easier access
-    this.iFrame = document.getElementById("myIframe");
     // Add the listener for any messages coming from the unreal app
     this.addListener();
   }
