@@ -3,7 +3,7 @@
     <div id="iframecontainer">
       <iframe
         id="myIframe"
-        src="http://192.168.192.102:80"
+        :src="signallingServerAddress"
         width="1920"
         height="1080"
       ></iframe>
@@ -25,6 +25,7 @@ export default {
         type: "TestType",
         message: "Hello world",
       },
+      signallingServerAddress: "http://localhost:80",
       iFrameScale: 0.75
     };
   },
@@ -32,8 +33,7 @@ export default {
     sendMessage: function () {
       console.log("Sending message from Vue...");
       // Send a json message via the iFrame
-      document
-        .getElementById("myIframe")
+      document.getElementById("myIframe")
         .contentWindow.postMessage(JSON.stringify(this.jsonMessage), "*");
     },
     addListener: function () {
