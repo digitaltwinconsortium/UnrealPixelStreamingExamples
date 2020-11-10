@@ -3,9 +3,9 @@
     <div id="iframecontainer">
       <iframe
         id="myIframe"
-        src="http://localhost:80"
-        :width="width"
-        :height="height"
+        src="http://192.168.192.102:80"
+        width="1920"
+        height="1080"
       ></iframe>
     </div>
     <br /><br />
@@ -25,17 +25,8 @@ export default {
         type: "TestType",
         message: "Hello world",
       },
+      iFrameScale: 0.75
     };
-  },
-  computed: {
-    width: function () {
-      // Make the iframe 50% of the window width
-      return window.innerWidth * 0.65;
-    },
-    height: function () {
-      // Calculates a rough aspect ratio of 1920 / 1080
-      return this.width / 1.778;
-    },
   },
   methods: {
     sendMessage: function () {
@@ -48,14 +39,29 @@ export default {
     addListener: function () {
       // Adds a listener for any messages coming from the iFrame
       window.onmessage = function (e) {
-        alert("Message Recieved from Signalling Server: " + e.data);
-        console.log("Message Recieved from Signalling Server: " + e.data);
+        // This is where you will handle all return types, other messages may be sent to the window so you need to handle them accordingly.
+        // As we are only expecting strings, ignore any objects
+        if(typeof(e.data) !== 'object') {
+          // E.g. ignore webpack messages
+          if(!e.data.includes('webpack')) {
+            alert("Message Recieved from Signalling Server: " + e.data);
+          }
+        }
       };
     },
+    resizeIFrame: function() {
+      document.getElementById("myIframe").width = window.innerWidth * this.iFrameScale;
+      document.getElementById("myIframe").height = (window.innerWidth * this.iFrameScale) / 1.778;
+    },
+    addResizeListener: function() {
+      window.addEventListener('resize', this.resizeIFrame);
+    }
   },
   mounted: function () {
     // Add the listener for any messages coming from the unreal app
     this.addListener();
+    this.addResizeListener();
+    this.resizeIFrame();
   },
 };
 </script>
