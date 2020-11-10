@@ -1,54 +1,62 @@
 <template>
   <div class="home">
     <div id="iframecontainer">
-      <iframe id="myIframe" src="http://localhost:80" :width="width" :height="height"></iframe>
+      <iframe
+        id="myIframe"
+        src="http://localhost:80"
+        :width="width"
+        :height="height"
+      ></iframe>
     </div>
-    <br/><br/>
-      
+    <br /><br />
+
     <button @click="sendMessage">Send Message</button>
-    <input type="text" v-model="jsonMessage.message">
+    <input type="text" v-model="jsonMessage.message" />
   </div>
 </template>
 
 <script>
 export default {
   name: "Home",
-  data: function() {
+  data: function () {
     return {
       // Json message to send to the unreal app
       jsonMessage: {
         type: "TestType",
-        message: "Hello world"
+        message: "Hello world",
       },
-    }
+    };
   },
   computed: {
-    width: function() {
+    width: function () {
       // Make the iframe 50% of the window width
       return window.innerWidth * 0.65;
     },
-    height: function() {
+    height: function () {
       // Calculates a rough aspect ratio of 1920 / 1080
       return this.width / 1.778;
-    }
+    },
   },
   methods: {
-    sendMessage: function() {
+    sendMessage: function () {
       console.log("Sending message from Vue...");
       // Send a json message via the iFrame
-      document.getElementById("myIframe").contentWindow.postMessage(JSON.stringify(this.jsonMessage),'*');
+      document
+        .getElementById("myIframe")
+        .contentWindow.postMessage(JSON.stringify(this.jsonMessage), "*");
     },
-    addListener: function() {
+    addListener: function () {
       // Adds a listener for any messages coming from the iFrame
-      window.onmessage = function(e) {
+      window.onmessage = function (e) {
+        alert("Message Recieved from Signalling Server: " + e.data);
         console.log("Message Recieved from Signalling Server: " + e.data);
-      }
-    }
+      };
+    },
   },
-  mounted: function() {
+  mounted: function () {
     // Add the listener for any messages coming from the unreal app
     this.addListener();
-  }
+  },
 };
 </script>
 
